@@ -1,28 +1,63 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include<bits/stdc++.h>
 #define ll long long
 using namespace std;
 
+bool cmp(pair<ll,ll> &a,pair<ll,ll> &b)
+{
+    return a.first>b.first;
+}
+
 int main() {
 	// your code goes here
-	ll orders,orders_andy,orders_bob;
-	cin>>orders>>orders_andy>>orders_bob;
-	int order_values_andy[orders],order_values_bob[orders];
-	for(int i=0;i<orders;i++) cin>>order_values_andy[i];
-	for(int i=0;i<orders;i++) cin>>order_values_bob[i];
-	ll sum=0;
-	for(int i=0;i<orders;i++)
+	ll n,x,y;
+	cin>>n>>x>>y;
+	ll a[n],b[n];
+	for(ll i=0;i<n;i++) cin>>a[i];
+	for(ll i=0;i<n;i++) cin>>b[i];
+	vector<pair<ll,ll>> greedy;
+	for(int i=0;i<n;i++)
 	{
-	    if(order_values_andy[i]>order_values_bob[i] && orders_andy>0)
-	    {
-	        sum+=order_values_andy[i];
-	        orders_andy--;
-	    }
-	    else if(order_values_andy[i]<=order_values_bob[i] && orders_bob>0)
-	    {
-	        sum+=order_values_bob[i];
-	        orders_bob--;
-	    }
+	    ll diff=abs(a[i]-b[i]);
+	    greedy.push_back(make_pair(diff,i));
 	}
-	cout<<sum;
+	sort(greedy.begin(),greedy.end(),cmp);
+	ll ans=0;
+	for(auto i:greedy)
+	{
+	    int idx=i.second;
+	    if(a[idx]>b[idx])
+	    {
+	        if(x>0)
+	        {
+	        ans+=a[idx];
+	        x--;
+	        }
+	        else if(y>0)
+	        {
+	            ans+=b[idx];
+	        y--;
+	        }
+	        else
+	         ans+=max(a[idx],b[idx]);
+	    }
+	    else if(a[idx]<=b[idx])
+	    {
+	        if(y>0)
+	        {
+	            ans+=b[idx];
+	        y--;
+	        }
+	        else if(x>0){
+	            ans+=a[idx];
+	        x--;
+	        }
+	        else
+	         ans+=max(a[idx],b[idx]);
+	    }
+	    }
+	   
+	
+	cout<<ans;
 	return 0;
 }
